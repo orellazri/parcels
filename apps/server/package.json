@@ -7,7 +7,7 @@
     "build": "tsc",
     "dev": "tsx watch src/index.ts",
     "lint": "eslint .",
-    "start": "node dist/index.js"
+    "start": "drizzle-kit migrate && node dist/index.js"
   },
   "dependencies": {
     "@parcels/common": "workspace:*",
