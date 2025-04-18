@@ -13,6 +13,7 @@ const defaultConfig = {
         short_name: "Parcels",
         description: "Track your parcels through your email with AI",
         theme_color: "#ffffff",
+        display: "standalone",
         icons: [
           {
             src: "pwa-64x64.png",
@@ -28,7 +29,6 @@ const defaultConfig = {
             src: "pwa-512x512.png",
             sizes: "512x512",
             type: "image/png",
-            purpose: "any",
           },
           {
             src: "maskable-icon-512x512.png",
@@ -54,6 +54,7 @@ export default defineConfig(({ command, mode }) => {
     return {
       ...defaultConfig,
       server: {
+        host: "0.0.0.0",
         proxy: {
           "/api": {
             target: isDev ? "http://localhost:3000" : "/api",
