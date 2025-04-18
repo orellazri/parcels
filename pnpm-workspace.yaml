@@ -1,6 +1,9 @@
 packages:
   - packages/*
   - apps/*
+syncInjectedDepsAfterScripts:
+  - build
+injectWorkspacePackages: true
 onlyBuiltDependencies:
   - esbuild
   - sharp

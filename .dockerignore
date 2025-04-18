@@ -1,0 +1,11 @@
+node_modules
+dist
+.github
+compose.yaml
+release.sh
+Taskfile.yaml
+README.md
+.prettierrc
+.gitignore
+.env
+.env.example
