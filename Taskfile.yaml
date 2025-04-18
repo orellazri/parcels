@@ -1,9 +1,11 @@
 version: "3"
 tasks:
   default:
+    desc: Run whole application
     deps: [run:server, run:web]
 
   run:server:
+    desc: Run server
     deps: [build:common]
     dir: apps/server
     dotenv: [.env]
@@ -11,26 +13,31 @@ tasks:
       - pnpm run dev
 
   run:web:
+    desc: Run frontend
     dir: apps/web
     cmds:
       - pnpm run dev
 
   build:common:
+    desc: Build common package
     dir: packages/common
     cmds:
       - pnpm run build
 
   lint:
+    desc: Lint all packages
     cmds:
       - pnpm --recursive run lint
 
   migrate:
+    desc: Run migrations
     dir: apps/server
     dotenv: [.env]
     cmds:
       - pnpm exec drizzle-kit migrate
 
   migrate:generate:
+    desc: Generate migrations
     dir: apps/server
     requires:
       vars: [name]
@@ -38,12 +45,14 @@ tasks:
       - pnpm exec drizzle-kit generate --name {{.name}}
 
   migrate:drop:
+    desc: Drop migrations
     dir: apps/server
     dotenv: [.env]
     cmds:
       - pnpm exec drizzle-kit drop
 
   drizzle-studio:
+    desc: Run Drizzle Studio
     dir: apps/server
     cmds:
       - pnpm exec drizzle-kit studio
