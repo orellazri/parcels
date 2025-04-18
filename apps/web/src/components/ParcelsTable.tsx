@@ -56,7 +56,7 @@ export function ParcelsTable() {
   const [showReceived, setShowReceived] = useState(false);
   const editedValuesRef = useRef<Record<string, string>>({});
 
-  const listParcels = useListParcels();
+  const listParcels = useListParcels(showReceived);
   const updateParcel = useUpdateParcel();
   const deleteParcel = useDeleteParcel();
   const regenerateParcel = useRegenerateParcel();

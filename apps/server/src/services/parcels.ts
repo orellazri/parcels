@@ -6,8 +6,19 @@ import { ListParcelsResponseDto, UpdateParcelRequestDto, UpdateParcelResponseDto
 import { eq } from "drizzle-orm";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 
-export async function listParcels(db: NodePgDatabase<typeof schema>): Promise<ListParcelsResponseDto> {
-  const parcels = await db.query.parcelsTable.findMany();
+export async function listParcels(
+  db: NodePgDatabase<typeof schema>,
+  received: boolean,
+): Promise<ListParcelsResponseDto> {
+  let parcels;
+  // By default, we only show parcels that have not been received
+  if (received) {
+    parcels = await db.query.parcelsTable.findMany();
+  } else {
+    parcels = await db.query.parcelsTable.findMany({
+      where: eq(parcelsTable.received, false),
+    });
+  }
 
   return parcels.map((parcel) => ({
     id: parcel.id,

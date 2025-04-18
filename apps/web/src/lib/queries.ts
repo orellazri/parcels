@@ -7,11 +7,11 @@ import {
 } from "@parcels/common";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export function useListParcels() {
+export function useListParcels(received: boolean) {
   return useQuery<ListParcelsResponseDto>({
-    queryKey: ["parcels"],
+    queryKey: ["parcels", received],
     queryFn: async () => {
-      const response = await fetch("/api/parcels");
+      const response = await fetch(`/api/parcels${received ? "?received=true" : ""}`);
       if (!response.ok) {
         throw new Error("Failed to fetch parcels");
       }

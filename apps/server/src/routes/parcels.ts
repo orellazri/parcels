@@ -3,8 +3,9 @@ import { ListParcelsResponseDto, RefreshParcelsResponseDto, UpdateParcelRequestD
 import { FastifyInstance } from "fastify";
 
 export const parcelsRoutes = (fastify: FastifyInstance) => {
-  fastify.get<{ Reply: ListParcelsResponseDto }>("/", async (request, reply) => {
-    const parcels = await listParcels(fastify.db);
+  fastify.get<{ Querystring: { received?: string }; Reply: ListParcelsResponseDto }>("/", async (request, reply) => {
+    const received = request.query.received === "true";
+    const parcels = await listParcels(fastify.db, received);
     reply.send(parcels);
   });
 
