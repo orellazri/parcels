@@ -9,8 +9,8 @@ declare module "fastify" {
   }
 }
 
-export default fp(async function (fastify: FastifyInstance) {
-  const db = drizzle({ connection: process.env.DATABASE_URL!, casing: "snake_case", schema });
+export const drizzleDb = drizzle({ connection: process.env.DATABASE_URL!, casing: "snake_case", schema });
 
-  fastify.decorate("db", db);
+export default fp(async function (fastify: FastifyInstance) {
+  fastify.decorate("db", drizzleDb);
 });
