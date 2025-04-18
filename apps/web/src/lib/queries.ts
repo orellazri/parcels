@@ -37,8 +37,8 @@ export function useUpdateParcel() {
       }
       return response.json();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["parcels"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["parcels"] });
     },
   });
 }
@@ -54,8 +54,8 @@ export function useDeleteParcel() {
       }
       return response.json();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["parcels"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["parcels"] });
     },
   });
 }
@@ -71,8 +71,8 @@ export function useRegenerateParcel() {
       }
       return response.json();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["parcels"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["parcels"] });
     },
   });
 }
@@ -88,8 +88,8 @@ export function useRefreshParcels() {
       }
       return response.json();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["parcels"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["parcels"] });
     },
   });
 }
