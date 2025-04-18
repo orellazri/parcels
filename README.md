@@ -4,6 +4,8 @@ Parcels automatically tracks your parcels by monitoring your email for shipping 
 
 It periodically checks your email for new parcels in a given mailbox, extracts the product information using an AI model via OpenRouter, and stores the data in a PostgreSQL database.
 
+![Screenshot of the Parcels application dashboard showing tracked packages](assets/screenshot.png)
+
 ## Usage
 
 ### Environment variables
