@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Get current version
+CURRENT_VERSION=$(pnpm dlx json -f package.json version)
+echo "Current version: $CURRENT_VERSION"
+
 # Prompt for the new version tag
 echo "Enter the new version tag (without 'v' prefix, e.g. 1.0.1):"
 read VERSION
