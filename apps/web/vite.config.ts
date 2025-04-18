@@ -12,7 +12,7 @@ const defaultConfig = {
         name: "Parcels",
         short_name: "Parcels",
         description: "Track your parcels through your email with AI",
-        theme_color: "#ffffff",
+        theme_color: "#faa74f",
         display: "standalone",
         icons: [
           {
