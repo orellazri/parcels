@@ -18,6 +18,7 @@ Parcels automatically tracks your parcels by monitoring your email for shipping 
 | No       | REDACT_STRINGS       | A comma-separated list of strings to redact from the email content before sending to the AI model | My name,My address,My email                           |
 | No       | TIMEZONE             | Your timezone                                                                                     | UTC                                                   |
 | No       | REFRESH_PARCELS_CRON | The cron expression to refresh parcels                                                            | 0 0 \*/3 \* \* \*                                     |
+| No       | ENV                  | The environment the server is running in                                                          | production                                            |
 
 ### Running in Docker (Recommended)
 
