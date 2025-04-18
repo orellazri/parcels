@@ -1,4 +1,4 @@
-# Parcels
+# 📦 Parcels
 
 Parcels automatically tracks your parcels by monitoring your email for shipping notifications. It uses AI to extract tracking information and provides a centralized dashboard for all your incoming packages.
 
