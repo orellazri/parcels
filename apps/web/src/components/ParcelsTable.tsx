@@ -152,10 +152,6 @@ export function ParcelsTable() {
             parcel={parcel}
             onEdit={() => setEditingParcelId(parcel.id)}
             onToggleReceived={async () => {
-              // TODO
-              // if (!parcel.received) {
-              //   await deleteEmail(parcel.emailId);
-              // }
               try {
                 await updateParcel.mutateAsync({ id: parcel.id, payload: { received: !parcel.received } });
                 toast.success("Parcel updated");
