@@ -1,0 +1,277 @@
+import { DataTable } from "@/components/DataTable";
+import { RefreshButton } from "@/components/RefreshButton";
+import { formatDate } from "@/lib/date";
+import { useDeleteParcel, useListParcels, useRegenerateParcel, useUpdateParcel } from "@/lib/queries";
+import { ParcelResponseDto } from "@parcels/common";
+import { Badge, Checkbox, DropdownMenu, Flex, IconButton, Text, TextField, Tooltip } from "@radix-ui/themes";
+import { IconCheck, IconDots, IconPencil, IconRotate, IconTrash, IconX } from "@tabler/icons-react";
+import { ColumnDef } from "@tanstack/react-table";
+import { memo, useRef, useState } from "react";
+import { toast } from "sonner";
+
+const EditableCell = memo(function EditableCell({
+  initialValue,
+  isEditing,
+  onSave,
+  placeholder,
+  onEnterKeyPress,
+}: {
+  initialValue: string;
+  isEditing: boolean;
+  onSave: (value: string) => void;
+  placeholder: string;
+  onEnterKeyPress: () => void;
+}) {
+  const [value, setValue] = useState(initialValue);
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      onSave(value);
+      onEnterKeyPress();
+    }
+  };
+
+  if (isEditing) {
+    return (
+      <TextField.Root
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onBlur={() => onSave(value)}
+        onKeyDown={handleKeyDown}
+      />
+    );
+  }
+
+  return (
+    <Tooltip content={initialValue}>
+      <Text>{initialValue.length > 50 ? `${initialValue.slice(0, 50)}...` : initialValue}</Text>
+    </Tooltip>
+  );
+});
+
+export function ParcelsTable() {
+  const [editingParcelId, setEditingParcelId] = useState<number | null>(null);
+  const [showReceived, setShowReceived] = useState(false);
+  const editedValuesRef = useRef<Record<string, string>>({});
+
+  const listParcels = useListParcels();
+  const updateParcel = useUpdateParcel();
+  const deleteParcel = useDeleteParcel();
+  const regenerateParcel = useRegenerateParcel();
+
+  const saveParcel = async (id: number) => {
+    try {
+      const values = editedValuesRef.current;
+      await updateParcel.mutateAsync({
+        id,
+        payload: {
+          name: values.name,
+          store: values.store,
+        },
+      });
+      setEditingParcelId(null);
+      editedValuesRef.current = {};
+      toast.success("Parcel updated");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Unknown error");
+    }
+  };
+
+  const cancelEditing = () => {
+    setEditingParcelId(null);
+    editedValuesRef.current = {};
+  };
+
+  const handleFieldChange = (field: string, value: string) => {
+    editedValuesRef.current[field] = value;
+  };
+
+  const columns: ColumnDef<ParcelResponseDto>[] = [
+    {
+      accessorKey: "name",
+      header: "Name",
+      cell: ({ row }) => {
+        const parcel = row.original;
+        const isEditing = editingParcelId === parcel.id;
+
+        return (
+          <EditableCell
+            initialValue={parcel.name}
+            isEditing={isEditing}
+            onSave={(value) => handleFieldChange("name", value)}
+            placeholder="Name"
+            onEnterKeyPress={async () => await saveParcel(parcel.id)}
+          />
+        );
+      },
+    },
+    {
+      accessorKey: "store",
+      header: "Store",
+      cell: ({ row }) => {
+        const parcel = row.original;
+        const isEditing = editingParcelId === parcel.id;
+
+        return (
+          <EditableCell
+            initialValue={parcel.store ?? "Unknown"}
+            isEditing={isEditing}
+            onSave={(value) => handleFieldChange("store", value)}
+            placeholder="Store"
+            onEnterKeyPress={async () => await saveParcel(parcel.id)}
+          />
+        );
+      },
+    },
+    {
+      accessorKey: "received",
+      header: "Status",
+      cell: ({ row }) => {
+        const parcel = row.original;
+        return <Badge color={parcel.received ? "green" : "gray"}>{parcel.received ? "Received" : "Waiting"}</Badge>;
+      },
+    },
+    {
+      accessorKey: "createdAt",
+      header: "Created at",
+      cell: ({ row }) => {
+        const parcel = row.original;
+        return <Text>{formatDate(parcel.createdAt)}</Text>;
+      },
+    },
+    {
+      id: "actions",
+      cell: ({ row }) => {
+        const parcel = row.original;
+        return editingParcelId === parcel.id ? (
+          <EditingButtons onSave={async () => await saveParcel(parcel.id)} onCancel={cancelEditing} />
+        ) : (
+          <EditParcelButton
+            parcel={parcel}
+            onEdit={() => setEditingParcelId(parcel.id)}
+            onToggleReceived={async () => {
+              // TODO
+              // if (!parcel.received) {
+              //   await deleteEmail(parcel.emailId);
+              // }
+              try {
+                await updateParcel.mutateAsync({ id: parcel.id, payload: { received: !parcel.received } });
+                toast.success("Parcel updated");
+              } catch (e) {
+                toast.error(e instanceof Error ? e.message : "Unknown error");
+              }
+            }}
+            onDelete={async () => {
+              try {
+                await deleteParcel.mutateAsync(parcel.id);
+                toast.success("Parcel deleted");
+              } catch (e) {
+                toast.error(e instanceof Error ? e.message : "Unknown error");
+              }
+            }}
+            onRegenerate={async () => {
+              try {
+                await regenerateParcel.mutateAsync(parcel.id);
+                toast.success("Parcel regenerated");
+              } catch (e) {
+                toast.error(e instanceof Error ? e.message : "Unknown error");
+              }
+            }}
+          />
+        );
+      },
+    },
+  ];
+
+  return (
+    <Flex direction="column" gap="4">
+      <DataTable
+        columns={columns}
+        data={listParcels.data || []}
+        pageSize={10}
+        defaultSorting={[{ id: "createdAt", desc: true }]}
+        additionalSection={
+          <Flex justify="end" align="center" gap="4">
+            <Text as="label" size="2">
+              <Flex gap="2">
+                <Checkbox
+                  checked={showReceived}
+                  onCheckedChange={(checked) => setShowReceived(checked === "indeterminate" ? false : checked)}
+                />
+                Show received
+              </Flex>
+            </Text>
+
+            <RefreshButton />
+          </Flex>
+        }
+      />
+    </Flex>
+  );
+}
+
+function EditParcelButton({
+  parcel,
+  onEdit,
+  onToggleReceived,
+  onDelete,
+  onRegenerate,
+}: {
+  parcel: ParcelResponseDto;
+  onEdit: (parcel: ParcelResponseDto) => void;
+  onToggleReceived: (parcel: ParcelResponseDto) => void;
+  onDelete: (id: number) => void;
+  onRegenerate: (parcel: ParcelResponseDto) => void;
+}) {
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger>
+        <IconButton variant="ghost" color="gray">
+          <IconDots size={16} />
+        </IconButton>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Content>
+        <DropdownMenu.Item onClick={() => onToggleReceived(parcel)}>
+          {parcel.received ? (
+            <>
+              <IconX size={16} />
+              Not Received
+            </>
+          ) : (
+            <>
+              <IconCheck size={16} />
+              Received
+            </>
+          )}
+        </DropdownMenu.Item>
+        <DropdownMenu.Item onClick={() => onEdit(parcel)}>
+          <IconPencil size={16} />
+          Edit
+        </DropdownMenu.Item>
+        <DropdownMenu.Item onClick={() => onRegenerate(parcel)}>
+          <IconRotate size={16} />
+          Regenerate
+        </DropdownMenu.Item>
+        <DropdownMenu.Item color="red" onClick={() => onDelete(parcel.id)}>
+          <IconTrash size={16} />
+          Delete
+        </DropdownMenu.Item>
+      </DropdownMenu.Content>
+    </DropdownMenu.Root>
+  );
+}
+
+function EditingButtons({ onSave, onCancel }: { onSave: () => void; onCancel: () => void }) {
+  return (
+    <Flex gap="3" justify="end">
+      <IconButton variant="ghost" color="green" onClick={onSave}>
+        <IconCheck size={16} />
+      </IconButton>
+      <IconButton variant="ghost" color="red" onClick={onCancel}>
+        <IconX size={16} />
+      </IconButton>
+    </Flex>
+  );
+}
