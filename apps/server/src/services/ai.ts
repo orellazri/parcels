@@ -1,5 +1,5 @@
-import { EmailMessage } from "@/services/imap";
 import OpenAI from "openai";
+import { EmailMessage } from "../services/imap";
 
 const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",

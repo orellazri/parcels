@@ -1,6 +1,6 @@
-import { deleteParcel, listParcels, refreshParcels, regenerateParcel, updateParcel } from "@/services/parcels";
 import { ListParcelsResponseDto, RefreshParcelsResponseDto, UpdateParcelRequestDto } from "@parcels/common";
 import { FastifyInstance } from "fastify";
+import { deleteParcel, listParcels, refreshParcels, regenerateParcel, updateParcel } from "../services/parcels";
 
 export const parcelsRoutes = (fastify: FastifyInstance) => {
   fastify.get<{ Querystring: { received?: string }; Reply: ListParcelsResponseDto }>("/", async (request, reply) => {

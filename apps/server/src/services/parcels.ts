@@ -1,10 +1,10 @@
-import * as schema from "@/db/schema";
-import { parcelsTable } from "@/db/schema";
-import { extractDetailsFromEmail } from "@/services/ai";
-import { ImapService } from "@/services/imap";
 import { ListParcelsResponseDto, UpdateParcelRequestDto, UpdateParcelResponseDto } from "@parcels/common";
 import { eq } from "drizzle-orm";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
+import * as schema from "../db/schema";
+import { parcelsTable } from "../db/schema";
+import { extractDetailsFromEmail } from "../services/ai";
+import { ImapService } from "../services/imap";
 
 export async function listParcels(
   db: NodePgDatabase<typeof schema>,

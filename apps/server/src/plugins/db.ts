@@ -1,7 +1,7 @@
-import * as schema from "@/db/schema";
 import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
 import { FastifyInstance } from "fastify";
 import fp from "fastify-plugin";
+import * as schema from "../db/schema";
 
 declare module "fastify" {
   interface FastifyInstance {

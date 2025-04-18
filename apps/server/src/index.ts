@@ -1,9 +1,9 @@
-import { default as dbPlugin, drizzleDb } from "@/plugins/db";
-import { creditsRoutes } from "@/routes/credits";
-import { parcelsRoutes } from "@/routes/parcels";
-import { refreshParcels } from "@/services/parcels";
 import { CronJob } from "cron";
 import fastify from "fastify";
+import { default as dbPlugin, drizzleDb } from "./plugins/db";
+import { creditsRoutes } from "./routes/credits";
+import { parcelsRoutes } from "./routes/parcels";
+import { refreshParcels } from "./services/parcels";
 
 const server = fastify();
 
