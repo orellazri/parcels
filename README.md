@@ -55,8 +55,10 @@ Run the server:
 task run:server
 ```
 
-Run the web app:
+Run the frontend web app:
 
 ```bash
 task run:web
 ```
+
+Navigate to `http://localhost:5173` to view frontend.
