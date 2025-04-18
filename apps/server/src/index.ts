@@ -32,7 +32,7 @@ new CronJob(
   true, // start
   process.env.TIMEZONE ?? "UTC", // timeZone
   null, // context
-  true, // runOnInit
+  process.env.ENV !== "development", // runOnInit
   null, // utcOffset
   null, // unrefTimeout
   true, // waitForCompletion
