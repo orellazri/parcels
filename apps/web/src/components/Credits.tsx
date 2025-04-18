@@ -10,7 +10,7 @@ export function Credits() {
 
   return (
     <Text size="2" color="gray">
-      Usage: <Code>${getCredits.data?.totalUsage ? getCredits.data.totalUsage.toFixed(3) : "Unknown"}</Code>
+      Usage: <Code>${getCredits.data?.totalUsage ? getCredits.data.totalUsage.toFixed(4) : "Unknown"}</Code>
     </Text>
   );
 }
