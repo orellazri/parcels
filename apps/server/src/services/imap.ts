@@ -102,6 +102,7 @@ export class ImapService {
 
       const uid = uids[0].toString();
       await client.messageMove(uid, mailbox);
+      console.log(`Moved email ${emailId} to ${mailbox}`);
     } finally {
       await client.logout();
     }

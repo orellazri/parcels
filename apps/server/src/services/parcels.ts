@@ -27,7 +27,9 @@ export async function updateParcel(
 
   if (dto.received) {
     const imapService = ImapService.getInstance();
-    await imapService.moveMessage(updatedParcel[0].emailId, process.env.EMAIL_TRASH_MAILBOX ?? "[Gmail]/Trash");
+    imapService
+      .moveMessage(updatedParcel[0].emailId, process.env.EMAIL_TRASH_MAILBOX ?? "[Gmail]/Trash")
+      .catch((error) => console.error(`Error moving message to trash: ${error}`));
   }
 
   return {
