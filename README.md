@@ -2,6 +2,8 @@
 
 Parcels automatically tracks your parcels by monitoring your email for shipping notifications. It uses AI to extract tracking information and provides a centralized dashboard for all your incoming packages.
 
+It periodically checks your email for new parcels in a given mailbox, extracts the product information using an AI model via OpenRouter, and stores the data in a PostgreSQL database.
+
 ## Usage
 
 ### Environment variables
