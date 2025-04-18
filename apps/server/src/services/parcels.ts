@@ -21,9 +21,14 @@ export async function listParcels(db: NodePgDatabase<typeof schema>): Promise<Li
 export async function updateParcel(
   db: NodePgDatabase<typeof schema>,
   id: number,
-  parcel: UpdateParcelRequestDto,
+  dto: UpdateParcelRequestDto,
 ): Promise<UpdateParcelResponseDto> {
-  const updatedParcel = await db.update(parcelsTable).set(parcel).where(eq(parcelsTable.id, id)).returning();
+  const updatedParcel = await db.update(parcelsTable).set(dto).where(eq(parcelsTable.id, id)).returning();
+
+  if (dto.received) {
+    const imapService = ImapService.getInstance();
+    await imapService.moveMessage(updatedParcel[0].emailId, process.env.EMAIL_TRASH_MAILBOX ?? "[Gmail]/Trash");
+  }
 
   return {
     id: updatedParcel[0].id,

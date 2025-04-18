@@ -87,4 +87,23 @@ export class ImapService {
       await client.logout();
     }
   }
+
+  public async moveMessage(emailId: string, mailbox: string) {
+    const client = this.createClient();
+    await client.connect();
+    try {
+      await client.mailboxOpen(process.env.EMAIL_MAILBOX ?? "Parcels");
+
+      const uids = await client.search({ emailId });
+      if (uids.length !== 1) {
+        console.warn(`Tried to move email ${emailId} but not found (found ${uids.length} messages)`);
+        return;
+      }
+
+      const uid = uids[0].toString();
+      await client.messageMove(uid, mailbox);
+    } finally {
+      await client.logout();
+    }
+  }
 }
