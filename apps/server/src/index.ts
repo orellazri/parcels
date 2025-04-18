@@ -1,5 +1,7 @@
+import fastifyStatic from "@fastify/static";
 import { CronJob } from "cron";
 import fastify from "fastify";
+import path from "path";
 import { default as dbPlugin, drizzleDb } from "./plugins/db";
 import { creditsRoutes } from "./routes/credits";
 import { parcelsRoutes } from "./routes/parcels";
@@ -9,9 +11,14 @@ const server = fastify();
 
 server.register(dbPlugin);
 
+// React SPA
+server.register(fastifyStatic, { root: path.join(__dirname, "..", "web") });
+
+// API
 server.register(parcelsRoutes, { prefix: "/api/parcels" });
 server.register(creditsRoutes, { prefix: "/api/credits" });
 
+// Healthcheck
 server.get("/health", async (request, reply) => {
   return reply.status(200).send({ status: "ok" });
 });
