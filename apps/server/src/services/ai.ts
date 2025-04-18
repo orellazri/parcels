@@ -14,7 +14,7 @@ export async function extractDetailsFromEmail(email: EmailMessage): Promise<{
     return { name: null, store: null };
   }
 
-  const redactStrings = process.env.REDACT_STRINGS?.split(",");
+  const redactStrings = (process.env.REDACT_STRINGS ?? "").split(",");
   if (redactStrings) {
     redactStrings.forEach((string) => {
       const stringToRedact = string.trim();

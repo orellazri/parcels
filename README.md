@@ -6,16 +6,18 @@ Parcels automatically tracks your parcels by monitoring your email for shipping 
 
 ### Environment variables
 
-| Name                | Description                                                                                       | Example                                               |
-| ------------------- | ------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| DATABASE_URL        | The database URL                                                                                  | postgresql://postgres:postgres@localhost:5432/parcels |
-| OPENROUTER_API_KEY  | The OpenRouter API key                                                                            | sk-...                                                |
-| OPENROUTER_MODEL    | The OpenRouter model to use                                                                       | meta-llama/llama-3.1-8b-instruct                      |
-| EMAIL_ADDRESS       | The email address to monitor                                                                      | you@example.com                                       |
-| EMAIL_PASSWORD      | The password for the email address (e.g. app password for Gmail)                                  |                                                       |
-| EMAIL_MAILBOX       | The mailbox to monitor                                                                            | Parcels                                               |
-| EMAIL_TRASH_MAILBOX | The mailbox to move emails to when deleted                                                        | [Gmail]/Trash                                         |
-| REDACT_STRINGS      | A comma-separated list of strings to redact from the email content before sending to the AI model | My name,My address,My email                           |
+| Required | Name                 | Description                                                                                       | Example/Default value                                 |
+| -------- | -------------------- | ------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| **Yes**  | DATABASE_URL         | The database URL                                                                                  | postgresql://postgres:postgres@localhost:5432/parcels |
+| **Yes**  | OPENROUTER_API_KEY   | The OpenRouter API key                                                                            | sk-...                                                |
+| **Yes**  | OPENROUTER_MODEL     | The OpenRouter model to use                                                                       | meta-llama/llama-3.1-8b-instruct                      |
+| **Yes**  | EMAIL_ADDRESS        | The email address to monitor                                                                      | you@example.com                                       |
+| **Yes**  | EMAIL_PASSWORD       | The password for the email address (e.g. app password for Gmail)                                  |                                                       |
+| No       | EMAIL_MAILBOX        | The mailbox to monitor                                                                            | Parcels                                               |
+| No       | EMAIL_TRASH_MAILBOX  | The mailbox to move emails to when deleted                                                        | [Gmail]/Trash                                         |
+| No       | REDACT_STRINGS       | A comma-separated list of strings to redact from the email content before sending to the AI model | My name,My address,My email                           |
+| No       | TIMEZONE             | Your timezone                                                                                     | UTC                                                   |
+| No       | REFRESH_PARCELS_CRON | The cron expression to refresh parcels                                                            | 0 0 \*/3 \* \* \*                                     |
 
 ### Running in Docker (Recommended)
 

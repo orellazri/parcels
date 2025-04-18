@@ -48,7 +48,7 @@ export class ImapService {
     const client = this.createClient();
     await client.connect();
     try {
-      await client.mailboxOpen(process.env.EMAIL_MAILBOX || "Parcels");
+      await client.mailboxOpen(process.env.EMAIL_MAILBOX ?? "Parcels");
       const messages = await client.fetchAll("1:*", { uid: true, envelope: true });
 
       return messages.map((message) => ({
@@ -65,7 +65,7 @@ export class ImapService {
     const client = this.createClient();
     await client.connect();
     try {
-      await client.mailboxOpen(process.env.EMAIL_MAILBOX || "Parcels");
+      await client.mailboxOpen(process.env.EMAIL_MAILBOX ?? "Parcels");
 
       const uids = await client.search({ emailId });
       if (uids.length !== 1) {
