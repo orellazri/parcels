@@ -5,8 +5,18 @@ import { RefreshButton } from "@/components/RefreshButton";
 import { formatDate } from "@/lib/date";
 import { useDeleteParcel, useListParcels, useRegenerateParcel, useUpdateParcel } from "@/lib/queries";
 import { ParcelResponseDto } from "@parcels/common";
-import { Badge, Checkbox, DropdownMenu, Flex, IconButton, Text, TextField, Tooltip } from "@radix-ui/themes";
-import { IconCheck, IconDots, IconNote, IconPencil, IconRotate, IconTrash, IconX } from "@tabler/icons-react";
+import { Badge, DropdownMenu, Flex, IconButton, Text, TextField, Tooltip } from "@radix-ui/themes";
+import {
+  IconCheck,
+  IconDots,
+  IconEyeCheck,
+  IconEyeX,
+  IconNote,
+  IconPencil,
+  IconRotate,
+  IconTrash,
+  IconX,
+} from "@tabler/icons-react";
 import { ColumnDef } from "@tanstack/react-table";
 import { memo, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -231,17 +241,19 @@ export function ParcelsTable() {
           defaultSorting={[{ id: "createdAt", desc: true }]}
           leftSection={
             <Text size="2">
-              <Flex gap="2">
-                <Checkbox
-                  checked={showReceived}
-                  onCheckedChange={(checked) => setShowReceived(checked === "indeterminate" ? false : checked)}
-                />
-                Show received
+              <Flex gap="2" align="center">
+                <IconButton
+                  variant="ghost"
+                  color={showReceived ? "blue" : "gray"}
+                  onClick={() => setShowReceived(!showReceived)}
+                >
+                  {showReceived ? <IconEyeCheck size={18} /> : <IconEyeX size={18} />}
+                </IconButton>
               </Flex>
             </Text>
           }
           rightSection={
-            <Flex justify="end" align="center" gap="4">
+            <Flex justify="end" align="center" gap="2">
               <CreateParcelDialog />
               <RefreshButton />
             </Flex>
