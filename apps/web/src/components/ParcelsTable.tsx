@@ -229,18 +229,20 @@ export function ParcelsTable() {
           data={listParcels.data || []}
           pageSize={10}
           defaultSorting={[{ id: "createdAt", desc: true }]}
-          additionalSection={
+          leftSection={
+            <Text size="2">
+              <Flex gap="2">
+                <Checkbox
+                  checked={showReceived}
+                  onCheckedChange={(checked) => setShowReceived(checked === "indeterminate" ? false : checked)}
+                />
+                Show received
+              </Flex>
+            </Text>
+          }
+          rightSection={
             <Flex justify="end" align="center" gap="4">
               <CreateParcelDialog />
-              <Text as="label" size="2">
-                <Flex gap="2">
-                  <Checkbox
-                    checked={showReceived}
-                    onCheckedChange={(checked) => setShowReceived(checked === "indeterminate" ? false : checked)}
-                  />
-                  Show received
-                </Flex>
-              </Text>
               <RefreshButton />
             </Flex>
           }

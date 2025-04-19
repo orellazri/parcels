@@ -17,7 +17,8 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   pageSize?: number;
   defaultSorting?: SortingState;
-  additionalSection?: React.ReactNode;
+  leftSection?: React.ReactNode;
+  rightSection?: React.ReactNode;
 }
 
 export function DataTable<TData, TValue>({
@@ -25,7 +26,8 @@ export function DataTable<TData, TValue>({
   data,
   pageSize = 10,
   defaultSorting = [{ id: "createdAt", desc: true }],
-  additionalSection,
+  leftSection,
+  rightSection,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -54,18 +56,22 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <Flex justify="between" align="center" mb="3" gap="3">
-        <TextField.Root
-          placeholder="Search..."
-          value={globalFilter}
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setGlobalFilter(e.target.value)}
-          style={{ width: "100%", maxWidth: "360px" }}
-        >
-          <TextField.Slot side="left">
-            <IconSearch size={16} />
-          </TextField.Slot>
-        </TextField.Root>
+        <Flex flexGrow="1" align="center" gap="3">
+          <TextField.Root
+            placeholder="Search..."
+            value={globalFilter}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setGlobalFilter(e.target.value)}
+            style={{ width: "100%", maxWidth: "360px" }}
+          >
+            <TextField.Slot side="left">
+              <IconSearch size={16} />
+            </TextField.Slot>
+          </TextField.Root>
 
-        {additionalSection}
+          {leftSection}
+        </Flex>
+
+        {rightSection}
       </Flex>
 
       <Table.Root variant="surface">
