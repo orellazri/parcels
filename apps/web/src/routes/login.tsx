@@ -19,7 +19,12 @@ function RouteComponent() {
         </Text>
       </Flex>
 
-      <TextField.Root placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+      <TextField.Root
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
 
       <Button
         onClick={async () => {
