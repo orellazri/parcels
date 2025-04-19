@@ -12,8 +12,8 @@
     {
       "idx": 1,
       "version": "7",
-      "when": 1745071067400,
-      "tag": "0001_parcels_set_email_id_nullable",
+      "when": 1745072173458,
+      "tag": "0001_set_email_id_nullable_in_parcels",
       "breakpoints": true
     }
   ]
