@@ -17,7 +17,7 @@ export function RefreshButton() {
   return (
     <>
       <IconButton variant="soft" onClick={refresh} loading={refreshParcels.isPending}>
-        <IconRefresh size={16} />
+        <IconRefresh size="16" />
       </IconButton>
     </>
   );

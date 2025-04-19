@@ -64,7 +64,7 @@ export function DataTable<TData, TValue>({
             style={{ width: "100%", maxWidth: "360px" }}
           >
             <TextField.Slot side="left">
-              <IconSearch size={16} />
+              <IconSearch size="16" />
             </TextField.Slot>
           </TextField.Root>
 
@@ -87,8 +87,8 @@ export function DataTable<TData, TValue>({
                   <Flex gap="2" align="center">
                     {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                     {{
-                      asc: <IconArrowUp size={14} />,
-                      desc: <IconArrowDown size={14} />,
+                      asc: <IconArrowUp size="14" />,
+                      desc: <IconArrowDown size="14" />,
                     }[header.column.getIsSorted() as string] ?? null}
                   </Flex>
                 </Table.ColumnHeaderCell>
@@ -128,13 +128,13 @@ export function DataTable<TData, TValue>({
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
             >
-              <IconArrowLeft size={14} />
+              <IconArrowLeft size="14" />
             </IconButton>
             <Text size="2" color="gray">
               Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
             </Text>
             <IconButton variant="soft" size="1" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-              <IconArrowRight size={14} />
+              <IconArrowRight size="14" />
             </IconButton>
           </Flex>
         )}

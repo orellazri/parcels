@@ -186,7 +186,7 @@ export function ParcelsTable() {
         ) : (
           <Flex gap="3" justify="end">
             <IconButton variant="ghost" color={parcel.note ? "blue" : "gray"} onClick={() => openNotesDialog(parcel)}>
-              <IconNote size={16} />
+              <IconNote size="16" />
             </IconButton>
 
             <EditParcelButton
@@ -247,7 +247,7 @@ export function ParcelsTable() {
                   color={showReceived ? "blue" : "gray"}
                   onClick={() => setShowReceived(!showReceived)}
                 >
-                  {showReceived ? <IconEyeCheck size={18} /> : <IconEyeX size={18} />}
+                  {showReceived ? <IconEyeCheck size="18" /> : <IconEyeX size="18" />}
                 </IconButton>
               </Flex>
             </Text>
@@ -281,33 +281,33 @@ function EditParcelButton({
     <DropdownMenu.Root>
       <DropdownMenu.Trigger>
         <IconButton variant="ghost" color="gray">
-          <IconDots size={16} />
+          <IconDots size="16" />
         </IconButton>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
         <DropdownMenu.Item onClick={() => onToggleReceived(parcel)}>
           {parcel.received ? (
             <>
-              <IconX size={16} />
+              <IconX size="16" />
               Not Received
             </>
           ) : (
             <>
-              <IconCheck size={16} />
+              <IconCheck size="16" />
               Received
             </>
           )}
         </DropdownMenu.Item>
         <DropdownMenu.Item onClick={() => onEdit(parcel)}>
-          <IconPencil size={16} />
+          <IconPencil size="16" />
           Edit
         </DropdownMenu.Item>
         <DropdownMenu.Item onClick={() => onRegenerate(parcel)}>
-          <IconRotate size={16} />
+          <IconRotate size="16" />
           Regenerate
         </DropdownMenu.Item>
         <DropdownMenu.Item color="red" onClick={() => onDelete(parcel.id)}>
-          <IconTrash size={16} />
+          <IconTrash size="16" />
           Delete
         </DropdownMenu.Item>
       </DropdownMenu.Content>
@@ -319,10 +319,10 @@ function EditingButtons({ onSave, onCancel }: { onSave: () => void; onCancel: ()
   return (
     <Flex gap="3" justify="end">
       <IconButton variant="ghost" color="green" onClick={onSave}>
-        <IconCheck size={16} />
+        <IconCheck size="16" />
       </IconButton>
       <IconButton variant="ghost" color="red" onClick={onCancel}>
-        <IconX size={16} />
+        <IconX size="16" />
       </IconButton>
     </Flex>
   );
