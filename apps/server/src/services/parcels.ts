@@ -1,15 +1,11 @@
 import { ListParcelsResponseDto, UpdateParcelRequestDto, UpdateParcelResponseDto } from "@parcels/common";
 import { eq } from "drizzle-orm";
-import { NodePgDatabase } from "drizzle-orm/node-postgres";
-import * as schema from "../db/schema";
+import { db } from "../db/db";
 import { parcelsTable } from "../db/schema";
 import { extractDetailsFromEmail } from "../services/ai";
 import { ImapService } from "../services/imap";
 
-export async function listParcels(
-  db: NodePgDatabase<typeof schema>,
-  received: boolean,
-): Promise<ListParcelsResponseDto> {
+export async function listParcels(received: boolean): Promise<ListParcelsResponseDto> {
   let parcels;
   // By default, we only show parcels that have not been received
   if (received) {
@@ -29,11 +25,7 @@ export async function listParcels(
   }));
 }
 
-export async function updateParcel(
-  db: NodePgDatabase<typeof schema>,
-  id: number,
-  dto: UpdateParcelRequestDto,
-): Promise<UpdateParcelResponseDto> {
+export async function updateParcel(id: number, dto: UpdateParcelRequestDto): Promise<UpdateParcelResponseDto> {
   const updatedParcel = await db.update(parcelsTable).set(dto).where(eq(parcelsTable.id, id)).returning();
 
   if (dto.received) {
@@ -52,11 +44,11 @@ export async function updateParcel(
   };
 }
 
-export async function deleteParcel(db: NodePgDatabase<typeof schema>, id: number) {
+export async function deleteParcel(id: number) {
   await db.delete(parcelsTable).where(eq(parcelsTable.id, id));
 }
 
-export async function regenerateParcel(db: NodePgDatabase<typeof schema>, id: number) {
+export async function regenerateParcel(id: number) {
   const parcel = await db.query.parcelsTable.findFirst({
     where: eq(parcelsTable.id, id),
   });
@@ -87,7 +79,7 @@ export async function regenerateParcel(db: NodePgDatabase<typeof schema>, id: nu
   };
 }
 
-export async function refreshParcels(db: NodePgDatabase<typeof schema>) {
+export async function refreshParcels() {
   const imapService = ImapService.getInstance();
   const messages = await imapService.listMessages();
 

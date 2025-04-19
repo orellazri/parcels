@@ -3,7 +3,7 @@ import { CronJob } from "cron";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 import fastify from "fastify";
 import path from "path";
-import { default as dbPlugin, drizzleDb } from "./plugins/db";
+import { db } from "./db/db";
 import { creditsRoutes } from "./routes/credits";
 import { parcelsRoutes } from "./routes/parcels";
 import { refreshParcels } from "./services/parcels";
@@ -11,15 +11,13 @@ import { refreshParcels } from "./services/parcels";
 async function main() {
   try {
     console.info("Migrating database");
-    await migrate(drizzleDb, { migrationsFolder: path.join(__dirname, "..", "drizzle") });
+    await migrate(db, { migrationsFolder: path.join(__dirname, "..", "drizzle") });
   } catch (error) {
     console.error("Error migrating database", error);
     process.exit(1);
   }
 
   const server = fastify();
-
-  server.register(dbPlugin);
 
   // React SPA
   server.register(fastifyStatic, { root: path.join(__dirname, "..", "web") });
@@ -39,7 +37,7 @@ async function main() {
     async function () {
       console.log("Refreshing parcels...");
       try {
-        const numCreated = await refreshParcels(drizzleDb);
+        const numCreated = await refreshParcels();
         console.log(`Refreshed parcels. Created ${numCreated} parcels`);
       } catch (error) {
         console.error("Error refreshing parcels", error);
