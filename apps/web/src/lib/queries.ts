@@ -65,7 +65,7 @@ export function useRefreshParcels() {
 
   return useMutation<RefreshParcelsResponseDto>({
     mutationFn: async () => {
-      const response = await api.post("/parcels/refresh");
+      const response = await api.get("/parcels/refresh");
       return response.data;
     },
     onSuccess: async () => {
