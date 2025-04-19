@@ -1,6 +1,6 @@
 import { ImapFlow } from "imapflow";
 import { simpleParser } from "mailparser";
-
+import { getConfig } from "../config/config";
 export type EmailMessage = {
   emailId: string;
   subject: string;
@@ -22,12 +22,12 @@ export class ImapService {
 
   private createClient(): ImapFlow {
     return new ImapFlow({
-      host: process.env.IMAP_HOST ?? "imap.gmail.com",
-      port: parseInt(process.env.IMAP_PORT ?? "993"),
+      host: getConfig().imapHost,
+      port: getConfig().imapPort,
       secure: true,
       auth: {
-        user: process.env.EMAIL_ADDRESS!,
-        pass: process.env.EMAIL_PASSWORD!,
+        user: getConfig().emailAddress,
+        pass: getConfig().emailPassword,
       },
       logger: {
         debug: (obj: object) => {}, // eslint-disable-line @typescript-eslint/no-unused-vars
@@ -48,7 +48,7 @@ export class ImapService {
     const client = this.createClient();
     await client.connect();
     try {
-      await client.mailboxOpen(process.env.EMAIL_MAILBOX ?? "Parcels");
+      await client.mailboxOpen(getConfig().emailMailbox);
       const messages = await client.fetchAll("1:*", { uid: true, envelope: true });
 
       return messages.map((message) => ({
@@ -65,7 +65,7 @@ export class ImapService {
     const client = this.createClient();
     await client.connect();
     try {
-      await client.mailboxOpen(process.env.EMAIL_MAILBOX ?? "Parcels");
+      await client.mailboxOpen(getConfig().emailMailbox);
 
       const uids = await client.search({ emailId });
       if (uids.length !== 1) {
@@ -92,7 +92,7 @@ export class ImapService {
     const client = this.createClient();
     await client.connect();
     try {
-      await client.mailboxOpen(process.env.EMAIL_MAILBOX ?? "Parcels");
+      await client.mailboxOpen(getConfig().emailMailbox);
 
       const uids = await client.search({ emailId });
       if (uids.length !== 1) {

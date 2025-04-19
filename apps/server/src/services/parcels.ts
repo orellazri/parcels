@@ -1,13 +1,14 @@
 import { ListParcelsResponseDto, UpdateParcelRequestDto, UpdateParcelResponseDto } from "@parcels/common";
 import { eq } from "drizzle-orm";
+import { getConfig } from "../config/config";
 import { db } from "../db/db";
 import { parcelsTable } from "../db/schema";
 import { extractDetailsFromEmail } from "../services/ai";
 import { ImapService } from "../services/imap";
 
 export async function listParcels(received: boolean): Promise<ListParcelsResponseDto> {
-  let parcels;
   // By default, we only show parcels that have not been received
+  let parcels;
   if (received) {
     parcels = await db.query.parcelsTable.findMany();
   } else {
@@ -31,7 +32,7 @@ export async function updateParcel(id: number, dto: UpdateParcelRequestDto): Pro
   if (dto.received) {
     const imapService = ImapService.getInstance();
     imapService
-      .moveMessage(updatedParcel[0].emailId, process.env.EMAIL_TRASH_MAILBOX ?? "[Gmail]/Trash")
+      .moveMessage(updatedParcel[0].emailId, getConfig().emailTrashMailbox)
       .catch((error) => console.error(`Error moving message to trash: ${error}`));
   }
 

@@ -3,6 +3,7 @@ import { CronJob } from "cron";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 import fastify from "fastify";
 import path from "path";
+import { getConfig } from "./config/config";
 import { db } from "./db/db";
 import { creditsRoutes } from "./routes/credits";
 import { parcelsRoutes } from "./routes/parcels";
@@ -33,7 +34,7 @@ async function main() {
 
   // Refresh parcels in the background
   new CronJob(
-    process.env.REFRESH_PARCELS_CRON ?? "0 0 */3 * * *",
+    getConfig().refreshParcelsCron,
     async function () {
       console.log("Refreshing parcels...");
       try {
@@ -45,9 +46,9 @@ async function main() {
     }, // onTick
     null, // onComplete
     true, // start
-    process.env.TIMEZONE ?? "UTC", // timeZone
+    getConfig().timezone, // timeZone
     null, // context
-    process.env.ENV !== "development", // runOnInit
+    getConfig().env !== "development", // runOnInit
     null, // utcOffset
     null, // unrefTimeout
     true, // waitForCompletion

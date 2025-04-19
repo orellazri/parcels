@@ -1,9 +1,10 @@
 import OpenAI from "openai";
+import { getConfig } from "../config/config";
 import { EmailMessage } from "../services/imap";
 
 const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
-  apiKey: process.env.OPENROUTER_API_KEY,
+  apiKey: getConfig().openRouterApiKey,
 });
 
 export async function extractDetailsFromEmail(email: EmailMessage): Promise<{
@@ -14,16 +15,14 @@ export async function extractDetailsFromEmail(email: EmailMessage): Promise<{
     return { name: null, store: null };
   }
 
-  const redactStrings = (process.env.REDACT_STRINGS ?? "").split(",");
-  if (redactStrings) {
-    redactStrings.forEach((string) => {
-      const stringToRedact = string.trim();
-      email.body = email.body?.replace(new RegExp(stringToRedact, "gi"), "REDACTED");
-    });
-  }
+  const redactStrings = getConfig().redactStrings;
+  redactStrings.forEach((string) => {
+    const stringToRedact = string.trim();
+    email.body = email.body?.replace(new RegExp(stringToRedact, "gi"), "REDACTED");
+  });
 
   const completion = await openai.chat.completions.create({
-    model: process.env.OPENROUTER_MODEL!,
+    model: getConfig().openRouterModel,
     messages: [
       {
         role: "system",
