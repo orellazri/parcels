@@ -27,7 +27,7 @@ async function main() {
   server.register(creditsRoutes, { prefix: "/api/credits" });
 
   // Healthcheck
-  server.get("/health", async (request, reply) => {
+  server.get("/api/health", async (request, reply) => {
     return reply.status(200).send({ status: "ok" });
   });
 
