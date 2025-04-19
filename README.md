@@ -10,21 +10,21 @@ It periodically checks your email for new parcels in a given mailbox, extracts t
 
 ### Environment variables
 
-| Required | Name                 | Description                                                                                       | Example/Default value                                 |
-| -------- | -------------------- | ------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| **Yes**  | DATABASE_URL         | The database URL                                                                                  | postgresql://postgres:postgres@localhost:5432/parcels |
-| **Yes**  | OPENROUTER_API_KEY   | The OpenRouter API key                                                                            | sk-...                                                |
-| **Yes**  | OPENROUTER_MODEL     | The OpenRouter model to use                                                                       | meta-llama/llama-3.1-8b-instruct                      |
-| **Yes**  | EMAIL_ADDRESS        | The email address to monitor                                                                      | you@example.com                                       |
-| **Yes**  | EMAIL_PASSWORD       | The password for the email address (e.g. app password for Gmail)                                  |                                                       |
-| No       | IMAP_HOST            | The IMAP host for the email server                                                                | imap.gmail.com                                        |
-| No       | IMAP_PORT            | The IMAP port for the email server                                                                | 993                                                   |
-| No       | MAILBOX              | The mailbox to monitor                                                                            | Parcels                                               |
-| No       | EMAIL_TRASH_MAILBOX  | The mailbox to move emails to when deleted                                                        | [Gmail]/Trash                                         |
-| No       | REDACT_STRINGS       | A comma-separated list of strings to redact from the email content before sending to the AI model | My name,My address,My email                           |
-| No       | TIMEZONE             | Your timezone                                                                                     | UTC                                                   |
-| No       | REFRESH_PARCELS_CRON | The cron expression to refresh parcels                                                            | 0 0 \*/3 \* \* \*                                     |
-| No       | ENV                  | The environment the server is running in                                                          | production                                            |
+| Required | Name                 | Description                                                                                     | Example/Default value                                 |
+| -------- | -------------------- | ----------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| **Yes**  | DATABASE_URL         | PostgreSQL database URL                                                                         | postgresql://postgres:postgres@localhost:5432/parcels |
+| **Yes**  | OPENROUTER_API_KEY   | OpenRouter API key                                                                              | sk-...                                                |
+| **Yes**  | OPENROUTER_MODEL     | OpenRouter model to use                                                                         | meta-llama/llama-3.1-8b-instruct                      |
+| **Yes**  | EMAIL_ADDRESS        | Email address to monitor                                                                        | you@example.com                                       |
+| **Yes**  | EMAIL_PASSWORD       | Password for the email address (e.g. app password for Gmail)                                    |                                                       |
+| No       | IMAP_HOST            | IMAP host for the email server                                                                  | imap.gmail.com                                        |
+| No       | IMAP_PORT            | IMAP port for the email server                                                                  | 993                                                   |
+| No       | MAILBOX              | Mailbox to monitor                                                                              | Parcels                                               |
+| No       | EMAIL_TRASH_MAILBOX  | Mailbox to move emails to when marked as received                                               | [Gmail]/Trash                                         |
+| No       | REDACT_STRINGS       | Comma-separated list of strings to redact from the email content before sending to the AI model | My name,My address,My email                           |
+| No       | TIMEZONE             | Your timezone                                                                                   | UTC                                                   |
+| No       | REFRESH_PARCELS_CRON | cron expression to refresh parcels                                                              | 0 0 \*/3 \* \* \*                                     |
+| No       | ENV                  | Environment the server is running in                                                            | production                                            |
 
 ### Running in Docker (Recommended)
 
