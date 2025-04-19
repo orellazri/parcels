@@ -169,12 +169,11 @@ export function ParcelsTable() {
               }
             }}
             onRegenerate={async () => {
-              try {
-                await regenerateParcel.mutateAsync(parcel.id);
-                toast.success("Parcel regenerated");
-              } catch (e) {
-                toast.error(e instanceof Error ? e.message : "Unknown error");
-              }
+              toast.promise(regenerateParcel.mutateAsync(parcel.id), {
+                loading: "Regenerating parcel...",
+                success: "Parcel regenerated",
+                error: "Failed to regenerate parcel",
+              });
             }}
           />
         );

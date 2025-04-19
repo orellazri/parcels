@@ -7,13 +7,11 @@ export function RefreshButton() {
   const refreshParcels = useRefreshParcels();
 
   async function refresh() {
-    const { numCreated } = await refreshParcels.mutateAsync();
-
-    if (numCreated > 0) {
-      toast.success(`Found ${numCreated} new parcel${numCreated > 1 ? "s" : ""}`);
-    } else {
-      toast.info("No new parcels found");
-    }
+    toast.promise(refreshParcels.mutateAsync, {
+      loading: "Refreshing parcels...",
+      success: (data) => `Found ${data.numCreated} new parcel${data.numCreated > 1 ? "s" : ""}`,
+      error: "Failed to refresh parcels",
+    });
   }
 
   return (
