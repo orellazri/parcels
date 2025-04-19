@@ -1,4 +1,10 @@
-import { ListParcelsResponseDto, UpdateParcelRequestDto, UpdateParcelResponseDto } from "@parcels/common";
+import {
+  CreateParcelRequestDto,
+  ListParcelsResponseDto,
+  ParcelResponseDto,
+  UpdateParcelRequestDto,
+  UpdateParcelResponseDto,
+} from "@parcels/common";
 import { eq } from "drizzle-orm";
 import { getConfig } from "../config/config";
 import { db } from "../db/db";
@@ -22,26 +28,48 @@ export async function listParcels(received: boolean): Promise<ListParcelsRespons
     name: parcel.name,
     store: parcel.store,
     received: parcel.received,
+    emailId: parcel.emailId ?? undefined,
     createdAt: parcel.createdAt,
   }));
 }
 
-export async function updateParcel(id: number, dto: UpdateParcelRequestDto): Promise<UpdateParcelResponseDto> {
-  const updatedParcel = await db.update(parcelsTable).set(dto).where(eq(parcelsTable.id, id)).returning();
+export async function createParcel(dto: CreateParcelRequestDto): Promise<ParcelResponseDto> {
+  const [parcel] = await db
+    .insert(parcelsTable)
+    .values({
+      name: dto.name,
+      store: dto.store,
+      received: false,
+    })
+    .returning();
 
-  if (dto.received) {
+  return {
+    id: parcel.id,
+    name: parcel.name,
+    store: parcel.store,
+    received: parcel.received,
+    emailId: parcel.emailId ?? undefined,
+    createdAt: parcel.createdAt,
+  };
+}
+
+export async function updateParcel(id: number, dto: UpdateParcelRequestDto): Promise<UpdateParcelResponseDto> {
+  const [updatedParcel] = await db.update(parcelsTable).set(dto).where(eq(parcelsTable.id, id)).returning();
+
+  if (dto.received && updatedParcel.emailId) {
     const imapService = ImapService.getInstance();
     imapService
-      .moveMessage(updatedParcel[0].emailId, getConfig().emailTrashMailbox)
+      .moveMessage(updatedParcel.emailId, getConfig().emailTrashMailbox)
       .catch((error) => console.error(`Error moving message to trash: ${error}`));
   }
 
   return {
-    id: updatedParcel[0].id,
-    name: updatedParcel[0].name,
-    store: updatedParcel[0].store,
-    received: updatedParcel[0].received,
-    createdAt: updatedParcel[0].createdAt,
+    id: updatedParcel.id,
+    name: updatedParcel.name,
+    store: updatedParcel.store,
+    received: updatedParcel.received,
+    emailId: updatedParcel.emailId ?? undefined,
+    createdAt: updatedParcel.createdAt,
   };
 }
 
@@ -58,11 +86,21 @@ export async function regenerateParcel(id: number) {
     throw new Error("Parcel not found");
   }
 
+  if (!parcel.emailId) {
+    return {
+      id: parcel.id,
+      name: parcel.name,
+      store: parcel.store,
+      received: parcel.received,
+      createdAt: parcel.createdAt,
+    };
+  }
+
   const imapService = ImapService.getInstance();
   const messageWithBody = await imapService.getMessage(parcel.emailId);
   const { name, store } = await extractDetailsFromEmail(messageWithBody);
 
-  const updatedParcel = await db
+  const [updatedParcel] = await db
     .update(parcelsTable)
     .set({
       name: name ?? messageWithBody.subject,
@@ -72,11 +110,12 @@ export async function regenerateParcel(id: number) {
     .returning();
 
   return {
-    id: updatedParcel[0].id,
-    name: updatedParcel[0].name,
-    store: updatedParcel[0].store,
-    received: updatedParcel[0].received,
-    createdAt: updatedParcel[0].createdAt,
+    id: updatedParcel.id,
+    name: updatedParcel.name,
+    store: updatedParcel.store,
+    received: updatedParcel.received,
+    emailId: updatedParcel.emailId!,
+    createdAt: updatedParcel.createdAt,
   };
 }
 

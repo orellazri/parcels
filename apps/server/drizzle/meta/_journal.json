@@ -8,6 +8,13 @@
       "when": 1744975785471,
       "tag": "0000_create_parcels",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1745071067400,
+      "tag": "0001_parcels_set_email_id_nullable",
+      "breakpoints": true
     }
   ]
 }

@@ -1,3 +1,4 @@
+import { CreateParcelDialog } from "@/components/CreateParcelDialog";
 import { DataTable } from "@/components/DataTable";
 import { RefreshButton } from "@/components/RefreshButton";
 import { formatDate } from "@/lib/date";
@@ -190,6 +191,7 @@ export function ParcelsTable() {
         defaultSorting={[{ id: "createdAt", desc: true }]}
         additionalSection={
           <Flex justify="end" align="center" gap="4">
+            <CreateParcelDialog />
             <Text as="label" size="2">
               <Flex gap="2">
                 <Checkbox
@@ -199,7 +201,6 @@ export function ParcelsTable() {
                 Show received
               </Flex>
             </Text>
-
             <RefreshButton />
           </Flex>
         }

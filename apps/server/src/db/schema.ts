@@ -7,7 +7,7 @@ export const parcelsTable = pgTable(
     name: text().notNull(),
     store: text().notNull(),
     received: boolean().notNull().default(false),
-    emailId: text().notNull(),
+    emailId: text(),
     createdAt: timestamp().notNull().defaultNow(),
   },
   (table) => [uniqueIndex("email_id_idx").on(table.emailId)],

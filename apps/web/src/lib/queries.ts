@@ -1,8 +1,11 @@
 import { api } from "@/lib/api";
 import {
+  CreateParcelRequestDto,
+  CreateParcelResponseDto,
   GetCreditsResponseDto,
   ListParcelsResponseDto,
   RefreshParcelsResponseDto,
+  RegenerateParcelResponseDto,
   UpdateParcelRequestDto,
   UpdateParcelResponseDto,
 } from "@parcels/common";
@@ -14,6 +17,20 @@ export function useListParcels(received: boolean) {
     queryFn: async () => {
       const response = await api.get<ListParcelsResponseDto>(`/parcels${received ? "?received=true" : ""}`);
       return response.data;
+    },
+  });
+}
+
+export function useCreateParcel() {
+  const queryClient = useQueryClient();
+
+  return useMutation<CreateParcelResponseDto, Error, CreateParcelRequestDto>({
+    mutationFn: async (payload) => {
+      const response = await api.post<CreateParcelResponseDto>("/parcels", payload);
+      return response.data;
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["parcels"] });
     },
   });
 }
@@ -49,9 +66,9 @@ export function useDeleteParcel() {
 export function useRegenerateParcel() {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<RegenerateParcelResponseDto, Error, number>({
     mutationFn: async (id: number) => {
-      const response = await api.post(`/parcels/${id}/regenerate`);
+      const response = await api.get<RegenerateParcelResponseDto>(`/parcels/${id}/regenerate`);
       return response.data;
     },
     onSuccess: async () => {

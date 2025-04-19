@@ -1,0 +1,1 @@
+ALTER TABLE "parcels" ALTER COLUMN "email_id" DROP NOT NULL;
