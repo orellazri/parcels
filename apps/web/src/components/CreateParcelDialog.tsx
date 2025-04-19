@@ -60,9 +60,9 @@ export function CreateParcelDialog() {
             </label>
             <label>
               <Text as="div" size="2" mb="1" weight="bold">
-                Notes (optional)
+                Note (optional)
               </Text>
-              <TextArea value={note} onChange={(e) => setNote(e.target.value)} placeholder="Notes about this parcel" />
+              <TextArea value={note} onChange={(e) => setNote(e.target.value)} placeholder="Note about this parcel" />
             </label>
           </Flex>
           <Flex gap="3" mt="4" justify="end">

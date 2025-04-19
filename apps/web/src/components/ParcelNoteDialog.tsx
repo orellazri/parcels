@@ -23,7 +23,7 @@ export function ParcelNoteDialog({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Content maxWidth="400px">
-        <Dialog.Title>Parcel Notes</Dialog.Title>
+        <Dialog.Title>Parcel Note</Dialog.Title>
         <Dialog.Description size="2" mb="4">
           View or edit the note for this parcel.
         </Dialog.Description>
