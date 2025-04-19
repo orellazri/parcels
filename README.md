@@ -17,6 +17,7 @@ It periodically checks your email for new parcels in a given mailbox, extracts t
 | **Yes**  | OPENROUTER_MODEL     | OpenRouter model to use                                                                         | meta-llama/llama-3.1-8b-instruct                      |
 | **Yes**  | EMAIL_ADDRESS        | Email address to monitor                                                                        | you@example.com                                       |
 | **Yes**  | EMAIL_PASSWORD       | Password for the email address (e.g. app password for Gmail)                                    |                                                       |
+| **Yes**  | WEB_PASSWORD         | Password for the web interface to authenticate with API                                         |                                                       |
 | No       | IMAP_HOST            | IMAP host for the email server                                                                  | imap.gmail.com                                        |
 | No       | IMAP_PORT            | IMAP port for the email server                                                                  | 993                                                   |
 | No       | MAILBOX              | Mailbox to monitor                                                                              | Parcels                                               |

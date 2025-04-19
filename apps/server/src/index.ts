@@ -5,6 +5,7 @@ import fastify from "fastify";
 import path from "path";
 import { getConfig } from "./config/config";
 import { db } from "./db/db";
+import { authMiddleware } from "./middleware/auth";
 import { creditsRoutes } from "./routes/credits";
 import { parcelsRoutes } from "./routes/parcels";
 import { refreshParcels } from "./services/parcels";
@@ -23,9 +24,16 @@ async function main() {
   // React SPA
   server.register(fastifyStatic, { root: path.join(__dirname, "..", "web") });
 
-  // API
-  server.register(parcelsRoutes, { prefix: "/api/parcels" });
-  server.register(creditsRoutes, { prefix: "/api/credits" });
+  // API with authentication
+  server.register(async (instance) => {
+    instance.addHook("onRequest", authMiddleware);
+    instance.register(parcelsRoutes, { prefix: "/api/parcels" });
+  });
+
+  server.register(async (instance) => {
+    instance.addHook("onRequest", authMiddleware);
+    instance.register(creditsRoutes, { prefix: "/api/credits" });
+  });
 
   // Healthcheck
   server.get("/api/health", async (request, reply) => {

@@ -4,6 +4,7 @@ type Config = {
   openRouterModel: string;
   emailAddress: string;
   emailPassword: string;
+  webPassword: string;
   imapHost: string;
   imapPort: number;
   emailMailbox: string;
@@ -23,6 +24,7 @@ function initializeConfig(): Config {
     openRouterModel: process.env.OPENROUTER_MODEL!,
     emailAddress: process.env.EMAIL_ADDRESS!,
     emailPassword: process.env.EMAIL_PASSWORD!,
+    webPassword: process.env.WEB_PASSWORD!,
     imapHost: process.env.IMAP_HOST || "imap.gmail.com",
     imapPort: parseInt(process.env.IMAP_PORT || "993", 10),
     emailMailbox: process.env.EMAIL_MAILBOX || "Parcels",
