@@ -1,3 +1,4 @@
+import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import { defineConfig } from "vite";
@@ -5,6 +6,7 @@ import { VitePWA } from "vite-plugin-pwa";
 
 const defaultConfig = {
   plugins: [
+    TanStackRouterVite({ target: "react", autoCodeSplitting: true }),
     react(),
     VitePWA({
       registerType: "autoUpdate",

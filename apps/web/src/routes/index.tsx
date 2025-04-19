@@ -1,8 +1,14 @@
 import { Credits } from "@/components/Credits";
 import { ParcelsTable } from "@/components/ParcelsTable";
 import { Box, Container, Flex, Heading } from "@radix-ui/themes";
+import "@radix-ui/themes/styles.css";
+import { createFileRoute } from "@tanstack/react-router";
 
-export function HomePage() {
+export const Route = createFileRoute("/")({
+  component: RouteComponent,
+});
+
+function RouteComponent() {
   return (
     <Container size="3">
       <Flex direction="column" gap="4">
