@@ -74,7 +74,7 @@ export function DataTable<TData, TValue>({
         {rightSection}
       </Flex>
 
-      <Table.Root variant="surface">
+      <Table.Root variant="surface" size={{ initial: "1", md: "2" }}>
         <Table.Header>
           {table.getHeaderGroups().map((headerGroup) => (
             <Table.Row key={headerGroup.id}>
