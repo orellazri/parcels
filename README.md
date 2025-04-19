@@ -17,7 +17,9 @@ It periodically checks your email for new parcels in a given mailbox, extracts t
 | **Yes**  | OPENROUTER_MODEL     | The OpenRouter model to use                                                                       | meta-llama/llama-3.1-8b-instruct                      |
 | **Yes**  | EMAIL_ADDRESS        | The email address to monitor                                                                      | you@example.com                                       |
 | **Yes**  | EMAIL_PASSWORD       | The password for the email address (e.g. app password for Gmail)                                  |                                                       |
-| No       | EMAIL_MAILBOX        | The mailbox to monitor                                                                            | Parcels                                               |
+| No       | IMAP_HOST            | The IMAP host for the email server                                                                | imap.gmail.com                                        |
+| No       | IMAP_PORT            | The IMAP port for the email server                                                                | 993                                                   |
+| No       | MAILBOX              | The mailbox to monitor                                                                            | Parcels                                               |
 | No       | EMAIL_TRASH_MAILBOX  | The mailbox to move emails to when deleted                                                        | [Gmail]/Trash                                         |
 | No       | REDACT_STRINGS       | A comma-separated list of strings to redact from the email content before sending to the AI model | My name,My address,My email                           |
 | No       | TIMEZONE             | Your timezone                                                                                     | UTC                                                   |

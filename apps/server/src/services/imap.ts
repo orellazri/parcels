@@ -22,8 +22,8 @@ export class ImapService {
 
   private createClient(): ImapFlow {
     return new ImapFlow({
-      host: "imap.gmail.com",
-      port: 993,
+      host: process.env.IMAP_HOST ?? "imap.gmail.com",
+      port: parseInt(process.env.IMAP_PORT ?? "993"),
       secure: true,
       auth: {
         user: process.env.EMAIL_ADDRESS!,
