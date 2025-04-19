@@ -1,5 +1,5 @@
 import { useCreateParcel } from "@/lib/queries";
-import { Button, Dialog, Flex, Text, TextField } from "@radix-ui/themes";
+import { Button, Dialog, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -7,16 +7,18 @@ export function CreateParcelDialog() {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [store, setStore] = useState("");
+  const [note, setNote] = useState("");
   const createParcel = useCreateParcel();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await createParcel.mutateAsync({ name, store });
+      await createParcel.mutateAsync({ name, store, note: note || undefined });
       toast.success("Parcel created");
       setOpen(false);
       setName("");
       setStore("");
+      setNote("");
     } catch (e) {
       toast.error(e instanceof Error ? e.message : "Unknown error");
     }
@@ -55,6 +57,12 @@ export function CreateParcelDialog() {
                 placeholder="Store name"
                 required
               />
+            </label>
+            <label>
+              <Text as="div" size="2" mb="1" weight="bold">
+                Notes (optional)
+              </Text>
+              <TextArea value={note} onChange={(e) => setNote(e.target.value)} placeholder="Notes about this parcel" />
             </label>
           </Flex>
           <Flex gap="3" mt="4" justify="end">

@@ -1,11 +1,12 @@
 import { CreateParcelDialog } from "@/components/CreateParcelDialog";
 import { DataTable } from "@/components/DataTable";
+import { ParcelNoteDialog } from "@/components/ParcelNoteDialog";
 import { RefreshButton } from "@/components/RefreshButton";
 import { formatDate } from "@/lib/date";
 import { useDeleteParcel, useListParcels, useRegenerateParcel, useUpdateParcel } from "@/lib/queries";
 import { ParcelResponseDto } from "@parcels/common";
 import { Badge, Checkbox, DropdownMenu, Flex, IconButton, Text, TextField, Tooltip } from "@radix-ui/themes";
-import { IconCheck, IconDots, IconPencil, IconRotate, IconTrash, IconX } from "@tabler/icons-react";
+import { IconCheck, IconDots, IconNote, IconPencil, IconRotate, IconTrash, IconX } from "@tabler/icons-react";
 import { ColumnDef } from "@tanstack/react-table";
 import { memo, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -56,6 +57,9 @@ export function ParcelsTable() {
   const [editingParcelId, setEditingParcelId] = useState<number | null>(null);
   const [showReceived, setShowReceived] = useState(false);
   const editedValuesRef = useRef<Record<string, string>>({});
+  const [notesDialogOpen, setNotesDialogOpen] = useState(false);
+  const [notesDialogParcel, setNotesDialogParcel] = useState<ParcelResponseDto | null>(null);
+  const [notesValue, setNotesValue] = useState("");
 
   const listParcels = useListParcels(showReceived);
   const updateParcel = useUpdateParcel();
@@ -87,6 +91,27 @@ export function ParcelsTable() {
 
   const handleFieldChange = (field: string, value: string) => {
     editedValuesRef.current[field] = value;
+  };
+
+  const openNotesDialog = (parcel: ParcelResponseDto) => {
+    setNotesDialogParcel(parcel);
+    setNotesValue(parcel.note ?? "");
+    setNotesDialogOpen(true);
+  };
+  const closeNotesDialog = () => {
+    setNotesDialogOpen(false);
+    setNotesDialogParcel(null);
+    setNotesValue("");
+  };
+  const handleSaveNotes = async () => {
+    if (!notesDialogParcel) return;
+    try {
+      await updateParcel.mutateAsync({ id: notesDialogParcel.id, payload: { note: notesValue } });
+      toast.success("Notes updated");
+      closeNotesDialog();
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Unknown error");
+    }
   };
 
   const columns: ColumnDef<ParcelResponseDto>[] = [
@@ -149,62 +174,79 @@ export function ParcelsTable() {
         return editingParcelId === parcel.id ? (
           <EditingButtons onSave={async () => await saveParcel(parcel.id)} onCancel={cancelEditing} />
         ) : (
-          <EditParcelButton
-            parcel={parcel}
-            onEdit={() => setEditingParcelId(parcel.id)}
-            onToggleReceived={async () => {
-              try {
-                await updateParcel.mutateAsync({ id: parcel.id, payload: { received: !parcel.received } });
-                toast.success("Parcel updated");
-              } catch (e) {
-                toast.error(e instanceof Error ? e.message : "Unknown error");
-              }
-            }}
-            onDelete={async () => {
-              try {
-                await deleteParcel.mutateAsync(parcel.id);
-                toast.success("Parcel deleted");
-              } catch (e) {
-                toast.error(e instanceof Error ? e.message : "Unknown error");
-              }
-            }}
-            onRegenerate={async () => {
-              toast.promise(regenerateParcel.mutateAsync(parcel.id), {
-                loading: "Regenerating parcel...",
-                success: "Parcel regenerated",
-                error: "Failed to regenerate parcel",
-              });
-            }}
-          />
+          <Flex gap="3" justify="end">
+            <IconButton variant="ghost" color={parcel.note ? "blue" : "gray"} onClick={() => openNotesDialog(parcel)}>
+              <IconNote size={16} />
+            </IconButton>
+
+            <EditParcelButton
+              parcel={parcel}
+              onEdit={() => setEditingParcelId(parcel.id)}
+              onToggleReceived={async () => {
+                try {
+                  await updateParcel.mutateAsync({ id: parcel.id, payload: { received: !parcel.received } });
+                  toast.success("Parcel updated");
+                } catch (e) {
+                  toast.error(e instanceof Error ? e.message : "Unknown error");
+                }
+              }}
+              onDelete={async () => {
+                try {
+                  await deleteParcel.mutateAsync(parcel.id);
+                  toast.success("Parcel deleted");
+                } catch (e) {
+                  toast.error(e instanceof Error ? e.message : "Unknown error");
+                }
+              }}
+              onRegenerate={async () => {
+                toast.promise(regenerateParcel.mutateAsync(parcel.id), {
+                  loading: "Regenerating parcel...",
+                  success: "Parcel regenerated",
+                  error: "Failed to regenerate parcel",
+                });
+              }}
+            />
+          </Flex>
         );
       },
     },
   ];
 
   return (
-    <Flex direction="column" gap="4">
-      <DataTable
-        columns={columns}
-        data={listParcels.data || []}
-        pageSize={10}
-        defaultSorting={[{ id: "createdAt", desc: true }]}
-        additionalSection={
-          <Flex justify="end" align="center" gap="4">
-            <CreateParcelDialog />
-            <Text as="label" size="2">
-              <Flex gap="2">
-                <Checkbox
-                  checked={showReceived}
-                  onCheckedChange={(checked) => setShowReceived(checked === "indeterminate" ? false : checked)}
-                />
-                Show received
-              </Flex>
-            </Text>
-            <RefreshButton />
-          </Flex>
-        }
+    <>
+      <ParcelNoteDialog
+        open={notesDialogOpen}
+        onOpenChange={setNotesDialogOpen}
+        value={notesValue}
+        onChange={(e) => setNotesValue(e.target.value)}
+        onCancel={closeNotesDialog}
+        onSave={handleSaveNotes}
+        loading={updateParcel.status === "pending"}
       />
-    </Flex>
+      <Flex direction="column" gap="4">
+        <DataTable
+          columns={columns}
+          data={listParcels.data || []}
+          pageSize={10}
+          defaultSorting={[{ id: "createdAt", desc: true }]}
+          additionalSection={
+            <Flex justify="end" align="center" gap="4">
+              <CreateParcelDialog />
+              <Text as="label" size="2">
+                <Flex gap="2">
+                  <Checkbox
+                    checked={showReceived}
+                    onCheckedChange={(checked) => setShowReceived(checked === "indeterminate" ? false : checked)}
+                  />
+                  Show received
+                </Flex>
+              </Text>
+              <RefreshButton />
+            </Flex>
+          }
+        />
+      </Flex>
+    </>
   );
 }
 

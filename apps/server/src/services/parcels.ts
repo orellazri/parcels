@@ -29,6 +29,7 @@ export async function listParcels(received: boolean): Promise<ListParcelsRespons
     store: parcel.store,
     received: parcel.received,
     emailId: parcel.emailId ?? undefined,
+    note: parcel.note ?? undefined,
     createdAt: parcel.createdAt,
   }));
 }
@@ -40,6 +41,7 @@ export async function createParcel(dto: CreateParcelRequestDto): Promise<ParcelR
       name: dto.name,
       store: dto.store,
       received: false,
+      note: dto.note,
     })
     .returning();
 
@@ -49,6 +51,7 @@ export async function createParcel(dto: CreateParcelRequestDto): Promise<ParcelR
     store: parcel.store,
     received: parcel.received,
     emailId: parcel.emailId ?? undefined,
+    note: parcel.note ?? undefined,
     createdAt: parcel.createdAt,
   };
 }
@@ -69,6 +72,7 @@ export async function updateParcel(id: number, dto: UpdateParcelRequestDto): Pro
     store: updatedParcel.store,
     received: updatedParcel.received,
     emailId: updatedParcel.emailId ?? undefined,
+    note: updatedParcel.note ?? undefined,
     createdAt: updatedParcel.createdAt,
   };
 }
@@ -115,6 +119,7 @@ export async function regenerateParcel(id: number) {
     store: updatedParcel.store,
     received: updatedParcel.received,
     emailId: updatedParcel.emailId!,
+    note: updatedParcel.note ?? undefined,
     createdAt: updatedParcel.createdAt,
   };
 }
