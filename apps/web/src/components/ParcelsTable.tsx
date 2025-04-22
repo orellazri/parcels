@@ -203,7 +203,7 @@ export function ParcelsTable() {
         return editingParcelId === parcel.id ? (
           <EditingButtons onSave={async () => await saveParcel(parcel.id)} onCancel={cancelEditing} />
         ) : (
-          <Flex gap="3" justify="end">
+          <Flex gap="2" justify="end">
             <IconButton variant="ghost" color={parcel.note ? "blue" : "gray"} onClick={() => openNotesDialog(parcel)}>
               <IconNote size="16" />
             </IconButton>
