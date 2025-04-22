@@ -27,6 +27,7 @@
     "@types/mailparser": "^3.4.5",
     "@types/node": "^22.14.1",
     "@types/pg": "^8.11.13",
+    "dotenv": "^16.5.0",
     "drizzle-kit": "^0.31.0",
     "eslint": "^9.24.0",
     "globals": "^16.0.0",
