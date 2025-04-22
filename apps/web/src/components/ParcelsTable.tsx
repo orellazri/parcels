@@ -170,21 +170,17 @@ export function ParcelsTable() {
 
         return (
           <>
-            <Box display={{ initial: "block", md: "none" }}>
-              <Badge color={parcel.received ? "green" : "gray"}>
-                {parcel.received ? <IconCheck size="16" /> : <IconHourglass size="16" />}
-              </Badge>
-            </Box>
-            <Box display={{ initial: "none", md: "block" }}>
-              <Badge color={parcel.received ? "green" : "gray"}>{parcel.received ? "Received" : "Waiting"}</Badge>
-            </Box>
+            <Badge color={parcel.received ? "green" : "gray"}>
+              {parcel.received ? <IconCheck size="16" /> : <IconHourglass size="16" />}
+              <Box display={{ initial: "none", md: "block" }}>{parcel.received ? "Received" : "Waiting"}</Box>
+            </Badge>
           </>
         );
       },
     },
     {
       accessorKey: "createdAt",
-      header: "Created",
+      header: "Created at",
       cell: ({ row }) => {
         const parcel = row.original;
         const formatted = formatDate(parcel.createdAt);
