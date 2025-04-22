@@ -5,12 +5,13 @@ import { RefreshButton } from "@/components/RefreshButton";
 import { formatDate } from "@/lib/date";
 import { useDeleteParcel, useListParcels, useRegenerateParcel, useUpdateParcel } from "@/lib/queries";
 import { ParcelResponseDto } from "@parcels/common";
-import { Badge, DropdownMenu, Flex, IconButton, Text, TextField, Tooltip } from "@radix-ui/themes";
+import { Badge, Box, DropdownMenu, Flex, IconButton, Text, TextField, Tooltip } from "@radix-ui/themes";
 import {
   IconCheck,
   IconDots,
   IconEyeCheck,
   IconEyeX,
+  IconHourglass,
   IconNote,
   IconPencil,
   IconRotate,
@@ -166,15 +167,37 @@ export function ParcelsTable() {
       header: "Status",
       cell: ({ row }) => {
         const parcel = row.original;
-        return <Badge color={parcel.received ? "green" : "gray"}>{parcel.received ? "Received" : "Waiting"}</Badge>;
+
+        return (
+          <>
+            <Box display={{ initial: "block", md: "none" }}>
+              <Badge color={parcel.received ? "green" : "gray"}>
+                {parcel.received ? <IconCheck size="16" /> : <IconHourglass size="16" />}
+              </Badge>
+            </Box>
+            <Box display={{ initial: "none", md: "block" }}>
+              <Badge color={parcel.received ? "green" : "gray"}>{parcel.received ? "Received" : "Waiting"}</Badge>
+            </Box>
+          </>
+        );
       },
     },
     {
       accessorKey: "createdAt",
-      header: "Created at",
+      header: "Created",
       cell: ({ row }) => {
         const parcel = row.original;
-        return <Text>{formatDate(parcel.createdAt)}</Text>;
+        const formatted = formatDate(parcel.createdAt);
+        return (
+          <>
+            <Box display={{ initial: "block", md: "none" }}>
+              <Text>{formatted.length > 8 ? `${formatted.slice(0, 8)}` : formatted}</Text>
+            </Box>
+            <Box display={{ initial: "none", md: "block" }}>
+              <Text>{formatted}</Text>
+            </Box>
+          </>
+        );
       },
     },
     {
