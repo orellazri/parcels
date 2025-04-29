@@ -128,29 +128,36 @@ export async function refreshParcels() {
   const imapService = ImapService.getInstance();
   const messages = await imapService.listMessages();
 
-  const results = await Promise.all(
-    messages.map(async (message) => {
-      const existingParcel = await db.query.parcelsTable.findFirst({
-        where: eq(parcelsTable.emailId, message.emailId),
-      });
+  const MAX_CONCURRENCY = 5;
+  const results: boolean[] = [];
+  for (let i = 0; i < messages.length; i += MAX_CONCURRENCY) {
+    const chunk = messages.slice(i, i + MAX_CONCURRENCY);
+    const chunkResults = await Promise.all(
+      chunk.map(async (message) => {
+        const existingParcel = await db.query.parcelsTable.findFirst({
+          where: eq(parcelsTable.emailId, message.emailId),
+        });
 
-      if (existingParcel) {
-        return false;
-      }
+        if (existingParcel) {
+          return false;
+        }
 
-      const messageWithBody = await imapService.getMessage(message.emailId);
-      const { name, store } = await extractDetailsFromEmail(messageWithBody);
+        // Fetch full message details only if it's a new parcel
+        const messageWithBody = await imapService.getMessage(message.emailId);
+        const { name, store } = await extractDetailsFromEmail(messageWithBody);
 
-      await db.insert(parcelsTable).values({
-        name: name ?? message.subject,
-        emailId: message.emailId,
-        store: store ?? message.from,
-        received: false,
-      });
+        await db.insert(parcelsTable).values({
+          name: name ?? message.subject,
+          emailId: message.emailId,
+          store: store ?? message.from,
+          received: false,
+        });
 
-      return true;
-    }),
-  );
+        return true;
+      }),
+    );
+    results.push(...chunkResults);
+  }
 
   return results.filter(Boolean).length;
 }
