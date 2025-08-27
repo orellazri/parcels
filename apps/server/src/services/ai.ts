@@ -26,18 +26,46 @@ export async function extractDetailsFromEmail(email: EmailMessage): Promise<{
     messages: [
       {
         role: "system",
-        content:
-          'You will be given the HTML contents of an email message of a product that the user has purchased in the following format: From: <from>\nSubject: <subject>\n\n<content>. Extract the product name and store name from the following text. You must return a JSON object with the format {"name": "product name", "store": null}. If you don\'t find any product name or a store name, return {"name": null, "store": null} respectively. If you find more than one product name, return the product names joined by a comma - for example {"name": "product name 1, product name 2", "store": "store name"}. Always prefer the store name as the official name - such as AliExpress instead of aliexpress.com. Only return the JSON object, nothing else. Do not return the json inside ```json or ```, only return the json object, so your output must be like this: {"name": "product name", "store": "store name"}. Your output must be be a valid JSON object. Do not end your output with a period. Do not return any other text than the JSON object, not even your reasoning.',
+        content: `
+        You will be given the HTML contents of an email message of a product that the user has purchased in the following format:
+        From: <from>\nSubject: <subject>\n\n<content>.
+        
+        Your job is to extract the product name and store name from the following text.
+        You must return a JSON object with the format {"name": "product name", "store": null}.
+        If you don't find any product name or a store name, return {"name": null, "store": null} respectively.
+        If you find more than one product name, return the product names joined by a comma - for example {"name": "product name 1, product name 2", "store": "store name"}.
+        Always prefer the store name as the official name - such as AliExpress instead of aliexpress.com.
+        If the product name is long and very descriptive, shorten it to a more concise name. For example, instead of "Apple iPhone 15 Pro Max 256GB 5G Smartphone - Space Black", return "iPhone 15 Pro Max".
+        `,
       },
       {
         role: "user",
         content: `From: ${email.from}\nSubject: ${email.subject}\n\n${email.body}`,
       },
     ],
-    response_format: { type: "json_object" },
+    response_format: {
+      type: "json_schema",
+      json_schema: {
+        name: "product_details",
+        strict: true,
+        schema: {
+          type: "object",
+          properties: {
+            name: {
+              type: "string",
+              description: "Product name",
+            },
+            store: {
+              type: "string",
+              description: "Store name",
+            },
+          },
+          required: ["name", "store"],
+          additionalProperties: false,
+        },
+      },
+    },
   });
-
-  console.info("AI Response", completion.choices[0].message);
 
   try {
     const content = completion.choices[0].message.content;
