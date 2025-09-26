@@ -4,13 +4,14 @@ import { ParcelNoteDialog } from "@/components/ParcelNoteDialog";
 import { RefreshButton } from "@/components/RefreshButton";
 import { formatDate } from "@/lib/date";
 import { useDeleteParcel, useListParcels, useRegenerateParcel, useUpdateParcel } from "@/lib/queries";
-import { ParcelResponseDto } from "@parcels/common";
+import { ParcelResponseDto, UpdateParcelReceivedMode } from "@parcels/common";
 import { Badge, Box, DropdownMenu, Flex, IconButton, Text, TextField, Tooltip } from "@radix-ui/themes";
 import {
   IconCheck,
   IconDots,
   IconEyeCheck,
   IconEyeX,
+  IconFolderCheck,
   IconHourglass,
   IconNote,
   IconPencil,
@@ -211,9 +212,15 @@ export function ParcelsTable() {
             <EditParcelButton
               parcel={parcel}
               onEdit={() => setEditingParcelId(parcel.id)}
-              onToggleReceived={async () => {
+              onToggleReceived={async (receivedMode: UpdateParcelReceivedMode) => {
                 try {
-                  await updateParcel.mutateAsync({ id: parcel.id, payload: { received: !parcel.received } });
+                  await updateParcel.mutateAsync({
+                    id: parcel.id,
+                    payload: {
+                      received: !parcel.received,
+                      receivedMode: !parcel.received ? receivedMode : undefined,
+                    },
+                  });
                   toast.success("Parcel updated");
                 } catch (e) {
                   toast.error(e instanceof Error ? e.message : "Unknown error");
@@ -292,9 +299,9 @@ function EditParcelButton({
 }: {
   parcel: ParcelResponseDto;
   onEdit: (parcel: ParcelResponseDto) => void;
-  onToggleReceived: (parcel: ParcelResponseDto) => void;
-  onDelete: (id: number) => void;
-  onRegenerate: (parcel: ParcelResponseDto) => void;
+  onToggleReceived: (receivedMode: UpdateParcelReceivedMode) => void;
+  onDelete: () => void;
+  onRegenerate: () => void;
 }) {
   return (
     <DropdownMenu.Root>
@@ -304,7 +311,7 @@ function EditParcelButton({
         </IconButton>
       </DropdownMenu.Trigger>
       <DropdownMenu.Content>
-        <DropdownMenu.Item onClick={() => onToggleReceived(parcel)}>
+        <DropdownMenu.Item onClick={() => onToggleReceived("trash")}>
           {parcel.received ? (
             <>
               <IconX size="16" />
@@ -317,15 +324,23 @@ function EditParcelButton({
             </>
           )}
         </DropdownMenu.Item>
+        {!parcel.received && (
+          <DropdownMenu.Item onClick={() => onToggleReceived("move")}>
+            <>
+              <IconFolderCheck size="16" />
+              Received (Move)
+            </>
+          </DropdownMenu.Item>
+        )}
         <DropdownMenu.Item onClick={() => onEdit(parcel)}>
           <IconPencil size="16" />
           Edit
         </DropdownMenu.Item>
-        <DropdownMenu.Item onClick={() => onRegenerate(parcel)}>
+        <DropdownMenu.Item onClick={() => onRegenerate()}>
           <IconRotate size="16" />
           Regenerate
         </DropdownMenu.Item>
-        <DropdownMenu.Item color="red" onClick={() => onDelete(parcel.id)}>
+        <DropdownMenu.Item color="red" onClick={() => onDelete()}>
           <IconTrash size="16" />
           Delete
         </DropdownMenu.Item>

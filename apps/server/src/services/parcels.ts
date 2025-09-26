@@ -61,8 +61,10 @@ export async function updateParcel(id: number, dto: UpdateParcelRequestDto): Pro
 
   if (dto.received && updatedParcel.emailId) {
     const imapService = ImapService.getInstance();
+    const destination = dto.receivedMode === "move" ? getConfig().emailMoveMailbox : getConfig().emailTrashMailbox;
+
     imapService
-      .moveMessage(updatedParcel.emailId, getConfig().emailTrashMailbox)
+      .moveMessage(updatedParcel.emailId, destination)
       .catch((error) => console.error(`Error moving message to trash: ${error}`));
   }
 

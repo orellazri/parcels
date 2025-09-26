@@ -9,6 +9,7 @@ type Config = {
   imapPort: number;
   emailMailbox: string;
   emailTrashMailbox: string;
+  emailMoveMailbox: string;
   redactStrings: string[];
   timezone: string;
   refreshParcelsCron: string;
@@ -29,6 +30,7 @@ function initializeConfig(): Config {
     imapPort: parseInt(process.env.IMAP_PORT || "993", 10),
     emailMailbox: process.env.EMAIL_MAILBOX || "Parcels",
     emailTrashMailbox: process.env.EMAIL_TRASH_MAILBOX || "[Gmail]/Trash",
+    emailMoveMailbox: process.env.EMAIL_MOVE_MAILBOX || "Inbox",
     redactStrings: process.env.REDACT_STRINGS?.split(",") || [],
     timezone: process.env.TIMEZONE || "UTC",
     refreshParcelsCron: process.env.REFRESH_PARCELS_CRON || "0 0 */3 * * *",

@@ -17,10 +17,13 @@ export type CreateParcelRequestDto = {
 };
 export type CreateParcelResponseDto = ParcelResponseDto;
 
+export type UpdateParcelReceivedMode = "trash" | "move";
+
 export type UpdateParcelRequestDto = Partial<{
   name: string;
   store: string;
   received: boolean;
+  receivedMode?: UpdateParcelReceivedMode;
   note?: string;
 }>;
 export type UpdateParcelResponseDto = ParcelResponseDto;
