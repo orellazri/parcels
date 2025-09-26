@@ -2,7 +2,6 @@ name: parcels
 services:
   postgres:
     image: postgres:17-alpine
-    container_name: parcels-postgres
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
@@ -11,7 +10,7 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - parcels-postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
 
 volumes:
-  parcels-postgres-data:
+  postgres-data:
