@@ -1,6 +1,6 @@
 {
   "name": "parcels",
-  "version": "1.5.5",
+  "version": "1.6.0",
   "private": true,
   "packageManager": "pnpm@10.9.0"
 }
