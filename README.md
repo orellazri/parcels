@@ -6,6 +6,8 @@ It periodically checks your email for new parcels in a given mailbox, extracts t
 
 ![Screenshot of the Parcels application dashboard showing tracked packages](assets/screenshot.png)
 
+_**Note**: This application was only tested and verified to work with Gmail._
+
 ## Usage
 
 ### Environment variables
