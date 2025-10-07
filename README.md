@@ -22,7 +22,7 @@ _**Note**: This application was only tested and verified to work with Gmail._
 | **Yes**  | WEB_PASSWORD         | Password for the web interface to authenticate with API                                         |                                                       |
 | No       | IMAP_HOST            | IMAP host for the email server                                                                  | imap.gmail.com                                        |
 | No       | IMAP_PORT            | IMAP port for the email server                                                                  | 993                                                   |
-| No       | MAILBOX              | Mailbox to monitor                                                                              | Parcels                                               |
+| No       | EMAIL_MAILBOX        | Mailbox to monitor                                                                              | Parcels                                               |
 | No       | EMAIL_TRASH_MAILBOX  | Mailbox to delete emails in when marked as received                                             | [Gmail]/Trash                                         |
 | No       | EMAIL_MOVE_MAILBOX   | Mailbox to move emails to when marked as received                                               | Inbox                                                 |
 | No       | REDACT_STRINGS       | Comma-separated list of strings to redact from the email content before sending to the AI model | My name,My address,My email                           |
